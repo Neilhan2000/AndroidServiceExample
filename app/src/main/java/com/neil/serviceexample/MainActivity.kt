@@ -22,11 +22,15 @@ class MainActivity : AppCompatActivity() {
                     }
             }
             buttonStopService.setOnClickListener {
-                Intent(this@MainActivity, NormalService::class.java)
-                    .also {
-                        it.putExtra(NormalService.SERVICE_STATE, NormalService.ServiceState.STOPPED.flag)
-                        startService(it)
-                    }
+//                Intent(this@MainActivity, NormalService::class.java)
+//                    .also {
+//                        it.putExtra(NormalService.SERVICE_STATE, NormalService.ServiceState.STOPPED.flag)
+//                        startService(it)
+//                    }
+                val intent = Intent(this@MainActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             }
         }
     }
