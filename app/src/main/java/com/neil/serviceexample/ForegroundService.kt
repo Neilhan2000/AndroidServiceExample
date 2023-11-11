@@ -47,6 +47,8 @@ class ForegroundService : Service() {
 
     private fun startDownload() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // Note: Other scopes will be launched if we click startButton multiple times.
         serviceScope.launch {
             (1..10).forEach { downloadProgress ->
                 delay(1000)
