@@ -12,6 +12,7 @@ import kotlinx.coroutines.*
 class ForegroundService : Service() {
 
     private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val notificationBuilder = NotificationCompat.Builder(this, FOREGROUND_DOWNLOAD_CHANNEL_ID)
 
     override fun onCreate() {
         super.onCreate()
@@ -40,8 +41,8 @@ class ForegroundService : Service() {
     }
 
     private fun startDownloadInForeground() {
-        val notification = buildDownloadNotification()
-        startForeground(NOTIFICATION_ID, notification)
+        val notification = getDownloadNotification()
+        startForeground(NOTIFICATION_ID, notification.build())
         startDownload()
     }
 
@@ -52,16 +53,16 @@ class ForegroundService : Service() {
         serviceScope.launch {
             (1..10).forEach { downloadProgress ->
                 delay(1000)
-                notificationManager.notify(NOTIFICATION_ID, buildDownloadNotification(progress = downloadProgress))
+                notificationManager.notify(NOTIFICATION_ID, getDownloadNotification(progress = downloadProgress).build())
             }
         }
     }
 
-    private fun buildDownloadNotification(progress: Int = 0) = NotificationCompat.Builder(this, FOREGROUND_DOWNLOAD_CHANNEL_ID)
+    private fun getDownloadNotification(progress: Int = 0) = notificationBuilder
         .setSmallIcon(R.drawable.ic_launcher_foreground)
+        .setOnlyAlertOnce(true)
         .setContentTitle("File Downloading")
         .setContentText("progress $progress/10")
-        .build()
 
     override fun onDestroy() {
         super.onDestroy()
