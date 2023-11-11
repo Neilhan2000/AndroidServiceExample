@@ -1,6 +1,7 @@
 package com.neil.serviceexample
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -53,15 +54,28 @@ class ForegroundService : Service() {
         serviceScope.launch {
             (1..10).forEach { downloadProgress ->
                 delay(1000)
-                notificationManager.notify(NOTIFICATION_ID, getDownloadNotification(progress = downloadProgress).build())
+                notificationManager.notify(NOTIFICATION_ID, updatedDownloadNotification(progress = downloadProgress).build())
             }
         }
     }
 
-    private fun getDownloadNotification(progress: Int = 0) = notificationBuilder
+    private fun getDownloadNotification() = notificationBuilder
         .setSmallIcon(R.drawable.ic_launcher_foreground)
         .setOnlyAlertOnce(true)
         .setContentTitle("File Downloading")
+        .setContentText("progress 0/10")
+        .addAction(
+            R.drawable.baseline_stop_24,
+            "Stop",
+            PendingIntent.getService(
+                this,
+                0,
+                Intent(this, ForegroundService::class.java).apply { putExtra(SERVICE_STATE, ServiceState.STOPPED.flag) },
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+        )
+
+    private fun updatedDownloadNotification(progress: Int) = notificationBuilder
         .setContentText("progress $progress/10")
 
     override fun onDestroy() {
