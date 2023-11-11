@@ -25,7 +25,7 @@ class ForegroundService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("Neil", "[NormalService] onStartCommand called")
         intent?.let { handleIntent(intent = it) }
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     private fun handleIntent(intent: Intent) {
