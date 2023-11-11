@@ -17,6 +17,14 @@ class MainActivity : AppCompatActivity() {
                 Intent(this@MainActivity, NormalService::class.java)
                     .also {
                         it.putExtra(NormalService.STRING_DATA, editTextService.text.toString())
+                        it.putExtra(NormalService.SERVICE_STATE, NormalService.ServiceState.STARTED.flag)
+                        startService(it)
+                    }
+            }
+            buttonStopService.setOnClickListener {
+                Intent(this@MainActivity, NormalService::class.java)
+                    .also {
+                        it.putExtra(NormalService.SERVICE_STATE, NormalService.ServiceState.STOPPED.flag)
                         startService(it)
                     }
             }

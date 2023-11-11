@@ -21,8 +21,16 @@ class NormalService : Service() {
     }
 
     private fun handleIntent(intent: Intent) {
-        val stringData = intent.getStringExtra(STRING_DATA)
-        Log.d("Neil", "[NormalService] service text = $stringData")
+        when (ServiceState.from(flag = intent.getStringExtra(SERVICE_STATE))) {
+            ServiceState.STARTED -> {
+                val stringData = intent.getStringExtra(STRING_DATA)
+                Log.d("Neil", "[NormalService] service text = $stringData")
+            }
+            ServiceState.STOPPED -> {
+                stopSelf()
+                Log.d("Neil", "[NormalService] Service stopped")
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -37,5 +45,15 @@ class NormalService : Service() {
 
     companion object {
         const val STRING_DATA = "string data"
+        const val SERVICE_STATE= "service state"
+    }
+
+    enum class ServiceState(val flag: String) {
+        STARTED("start"), STOPPED("stop");
+        companion object {
+            fun from(flag: String?): ServiceState {
+                return values().find { it.flag == flag } ?: throw NoSuchFieldException("state not exist")
+            }
+        }
     }
 }
