@@ -47,7 +47,11 @@ class MainActivity : AppCompatActivity() {
             buttonUnbindService.setOnClickListener {
                 Intent(this@MainActivity, DownloadBoundService::class.java)
                     .also {
-                        unbindService(serviceConnection)
+                        try {
+                            unbindService(serviceConnection)
+                        } catch (e: java.lang.IllegalArgumentException) {
+                            Log.d("Neil", "Service no registered")
+                        }
                     }
             }
             buttonStopService.setOnClickListener {
