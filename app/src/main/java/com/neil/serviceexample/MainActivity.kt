@@ -5,8 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import com.neil.serviceexample.DownloadBoundService.DownloadProgress
 import com.neil.serviceexample.DownloadBoundService.ServiceState
-import com.neil.serviceexample.DownloadBoundService.ServiceState.Companion
 import com.neil.serviceexample.databinding.ActivityMainBinding
 
 
@@ -14,7 +15,9 @@ class MainActivity : AppCompatActivity() {
 
     private val serviceConnection = DownloadBoundServiceConnection(
         onServiceConnected = { service ->
+            service.startDownload()
             Log.d("Neil", "MainActivity${this.hashCode()} Connect to Service: $service")
+            Log.d("Neil", "[BoundService] DownloadProgress: ${service.getDownloadProgress().currentProgress}/${service.getDownloadProgress().total}")
         },
         onServiceDisconnected = {
             Log.d("Neil", "MainActivity${this.hashCode()} Disconnected")

@@ -7,8 +7,14 @@ import android.content.ServiceConnection
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import kotlinx.coroutines.*
 
-class DownloadBoundService : Service() {
+class DownloadBoundService() : Service() {
+
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val totalFileCount = 10
+    private var downloadProgress = 0
+    private var isDownloadStarted = false
 
     override fun onCreate() {
         super.onCreate()
@@ -46,9 +52,29 @@ class DownloadBoundService : Service() {
     }
 
     override fun onDestroy() {
+        serviceScope.cancel()
         super.onDestroy()
         Log.d("Neil", "[BoundService] onDestroy called")
     }
+
+    fun startDownload() {
+        if (!isDownloadStarted) {
+            isDownloadStarted = true
+
+            serviceScope.launch {
+                (1..totalFileCount).forEach {
+                    delay(6000)
+                    downloadProgress += 1
+                }
+                isDownloadStarted = false
+            }
+        }
+    }
+
+    fun getDownloadProgress() = DownloadProgress(
+        total = totalFileCount,
+        currentProgress = downloadProgress
+    )
 
     inner class DownloadBinder() : Binder() {
         fun getService(): DownloadBoundService = this@DownloadBoundService
@@ -62,6 +88,11 @@ class DownloadBoundService : Service() {
             }
         }
     }
+
+    data class DownloadProgress(
+        val total: Int,
+        val currentProgress: Int
+    )
 
     companion object {
         const val SERVICE_STATE = "service_state"
