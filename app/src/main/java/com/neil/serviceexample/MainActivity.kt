@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
-import com.neil.serviceexample.DownloadBoundService.DownloadProgress
 import com.neil.serviceexample.DownloadBoundService.ServiceState
 import com.neil.serviceexample.databinding.ActivityMainBinding
 
@@ -62,6 +60,12 @@ class MainActivity : AppCompatActivity() {
                     .also {
                         it.putExtra(DownloadBoundService.SERVICE_STATE, ServiceState.STOPPED.flag)
                         startService(it)
+                    }
+            }
+            buttonStartActivity.setOnClickListener {
+                Intent(this@MainActivity, MainActivity::class.java)
+                    .also {
+                        startActivity(it)
                     }
             }
         }
