@@ -35,6 +35,7 @@ class ForegroundService : Service() {
                 Log.d("Neil", "[NormalService] Download service started")
             }
             ServiceState.STOPPED -> {
+                stopForeground(Service.STOP_FOREGROUND_DETACH)
                 stopSelf()
                 Log.d("Neil", "[NormalService] Download service stopped")
             }
