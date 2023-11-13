@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
                 Intent(this@MainActivity, ForegroundService::class.java)
                     .also {
                         it.putExtra(ForegroundService.SERVICE_STATE, ServiceState.STARTED.flag)
-                        startService(it)
+                        startForegroundService(it)
                     }
             }
             buttonStopService.setOnClickListener {
